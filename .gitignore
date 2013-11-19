@@ -1,7 +1,7 @@
 # Properties files #
 ####################
-./properties/local.properties
-./properties/environment/*.properties
+properties/local.properties
+properties/environment/*.properties
 
 # OS generated files #
 ######################
