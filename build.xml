@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!--
+#########################################################################
+# Filename    : build.xml                                               #
+# Description :                                                         #
+# Authors     : Benoit Caufriez                                         #
+# Last release: 19-11-2013                                              #
+#########################################################################
+-->
+
+<project name="Project" basedir="." default="help">
+	<property file="./properties/general.properties"/>
+	<property file="./properties/local.properties"/>
+
+	<import file="./library/tool/deploy.xml"/>
+
+	<target name="help">
+		<echo>
+			Basic usage :
+
+		</echo>
+	</target>
+</project>

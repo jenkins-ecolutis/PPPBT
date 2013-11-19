@@ -1,0 +1,88 @@
+<?xml version="1.0" ?>
+<!--
+#########################################################################
+# Filename    : library/tool/deploy.xml                                 #
+# Description : File describing the deployment task                     #
+# Authors     : Benoit Caufriez                                         #
+# Last release: 19-11-2013                                              #
+#########################################################################
+-->
+
+<project name="tool-deploy" basedir="./../" default="help">
+
+	<target name="deploy:list" description="List files">
+		<phingcall target="-deploy-execute-task">
+			<property name="deploy.dryRun" value="true" />
+		</phingcall>
+	</target>
+
+	<target name="deploy" description="Copy files">
+		<phingcall target="-deploy-execute-task">
+			<property name="deploy.dryRun" value="false" />
+		</phingcall>
+	</target>
+
+	<target name="-deploy-execute-task">
+		<property file="properties/environment/${environment}.properties" />
+		<if>
+			<and>
+				<isset property="deploy.remote.user" />
+				<isset property="deploy.remote.host" />
+			</and>
+			<then>
+				<!-- Deployment on a remote server -->
+				<echo>We are deploying on a remote server</echo>
+				<property name="deploy.destinationDir" value="${deploy.remote.user}@${deploy.remote.host}:${deploy.destinationFolder}" />
+				<property name="deploy.backupDir" value="${deploy.remote.user}@${deploy.remote.host}:${deploy.backupFolder}" />
+			</then>
+			<else>
+				<!-- Deployment on a remote server -->
+				<echo>We are deploying on a local server</echo>
+				<property name="deploy.destinationDir" value="${deploy.destinationFolder}" />
+				<property name="deploy.backupDir" value="${deploy.backupFolder}" />
+			</else>
+		</if>
+		<if>
+			<not>
+				<isset property="deploy.verbose" />
+			</not>
+			<then>
+				<property name="deploy.verbose" value="false" override="false" />
+			</then>
+		</if>
+		<if>
+			<not>
+				<isset property="deploy.itemizechanges" />
+			</not>
+			<then>
+				<property name="deploy.itemizechanges" value="false" override="false" />
+			</then>
+		</if>
+		<if>
+			<not>
+				<isset property="deploy.checksum" />
+			</not>
+			<then>
+				<property name="deploy.checksum" value="false" override="false" />
+			</then>
+		</if>
+		<if>
+			<not>
+				<isset property="deploy.delete" />
+			</not>
+			<then>
+				<property name="deploy.delete" value="true" override="true" />
+			</then>
+		</if>
+		<filesync
+			sourcedir="${projectDir}"
+			destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${DNS}"
+			excludefile="${deploy.excludeFile}"
+			backupdir="${deploy.backupDir}/${projectGitBranch}.${projectName}.${DNS}"
+			verbose="${deploy.verbose}"
+			dryrun="${deploy.dryRun}"
+			itemizechanges="${deploy.itemizeChanges}"
+			checksum="${deploy.checksum}"
+			delete="${deploy.delete}" />
+	</target>
+</project>
