@@ -1,8 +1,3 @@
-# Properties files #
-####################
-properties/local.properties
-properties/environment/*.properties
-
 # OS generated files #
 ######################
 .DS_Store
