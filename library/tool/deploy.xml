@@ -24,6 +24,9 @@
 
 	<target name="-deploy-execute-task">
 		<property file="properties/environment/${environment}.properties" />
+		<echo message="============> ${projectGitBranch}.${projectName}.${DNS}" />
+		<echo message="============> ${projectDir}" />
+		<!-- PREPARE mkdir destination dir -->
 		<if>
 			<and>
 				<isset property="deploy.remote.user" />
@@ -75,7 +78,7 @@
 			</then>
 		</if>
 		<filesync
-			sourcedir="${projectDir}"
+			sourcedir="${projectDir}/"
 			destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${DNS}"
 			excludefile="${deploy.excludeFile}"
 			backupdir="${deploy.backupDir}/${projectGitBranch}.${projectName}.${DNS}"

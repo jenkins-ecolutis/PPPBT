@@ -8,7 +8,7 @@
 #########################################################################
 -->
 
-<project name="Project" basedir="." default="help">
+<project name="Project" default="help">
 	<property file="./properties/general.properties"/>
 	<property file="./properties/local.properties"/>
 
