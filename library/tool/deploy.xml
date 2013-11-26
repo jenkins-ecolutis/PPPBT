@@ -82,6 +82,7 @@
 			destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${DNS}"
 			excludefile="${deploy.excludeFile}"
 			backupdir="${deploy.backupDir}/${projectGitBranch}.${projectName}.${DNS}"
+			options="--rsh='ssh -p22' -rpKz"
 			verbose="${deploy.verbose}"
 			dryrun="${deploy.dryRun}"
 			itemizechanges="${deploy.itemizeChanges}"
