@@ -9,10 +9,55 @@
 -->
 
 <project name="Project" default="help">
-	<property file="./properties/general.properties"/>
-	<property file="./properties/local.properties"/>
+	<!-- Import default properties -->
+	<property file="./properties/project.properties"/>
+	<property file="./properties/environment/default.properties"/>
 
+	<!-- Import environment properties -->
+	<if>
+		<isset property="environment" />
+		<then>
+			<echo message="Overwriting default.properties with ${environment}.properties" />
+			<property file="./properties/environment/${environment}.properties" override="true" />
+		</then>
+	</if>
+	
+	<!-- Import tools -->
 	<import file="./library/tool/deploy.xml"/>
+	<import file="./library/tool/database.xml"/>
+
+	<!-- TEST -->
+	<echo message="PROJECT CONFIGURATION" />
+		<echo message="projectDir = ${projectDir}" />
+		<echo message="projectName = ${projectName}" />
+		<echo message="projectGitBranch = ${projectGitBranch}" />
+		<echo message="environment = ${environment}" />
+		<echo message="buildDir = ${buildDir}" />
+	<echo message="USER CONFIGURATION" />
+		<echo message="owner.user = ${owner.user}" />
+		<echo message="owner.group = ${owner.group}" />
+	<echo message="SERVER CONFIGURATION" />
+		<echo message="srv.host = ${srv.host}" /> <!-- IF ISSET -->
+		<echo message="srv.sshPort = ${srv.sshPort}" /> <!-- IF ISSET -->
+		<echo message="srv.user = ${srv.user}" />
+	<echo message="DATABASE CONFIGURATION" />
+		<echo message="db.srv.host = ${db.srv.host}" /> <!-- IF ISSET --> 
+		<echo message="db.srv.sshPort = ${db.srv.sshPort}" /> <!-- IF ISSET --> 
+		<echo message="db.user = ${db.user}" />
+		<echo message="db.password = ${db.password}" />
+		<echo message="db.database = ${db.database}" />
+		<echo message="db.pdo.driver = ${db.pdo.driver}" />
+	<echo message="DEPLOY CONFIGURATION" />
+		<echo message="deploy.destinationFolder = ${deploy.destinationFolder}" />
+		<echo message="deploy.backupFolder = ${deploy.backupFolder}" />
+		<echo message="deploy.excludeFile = ${deploy.excludeFile}" />
+		<echo message="deploy.verbose = ${deploy.verbose}" />
+		<echo message="deploy.itemizeChanges = ${deploy.itemizeChanges}" />
+		<echo message="deploy.checksum = ${deploy.checksum}" />
+		<echo message="deploy.delete = ${deploy.delete}" />
+	<echo message="APACHE CONFIGURATION" />
+		<echo message="apache.dn = ${apache.dn}" />
+	<!-- TEST -->
 
 	<target name="help">
 		<echo>

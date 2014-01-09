@@ -24,19 +24,15 @@
 
 	<target name="-deploy-execute-task">
 		<property file="properties/environment/${environment}.properties" />
-		<echo message="============> ${projectGitBranch}.${projectName}.${DNS}" />
-		<echo message="============> ${projectDir}" />
-		<!-- PREPARE mkdir destination dir -->
 		<if>
 			<and>
-				<isset property="deploy.remote.user" />
-				<isset property="deploy.remote.host" />
+				<isset property="srv.host" />
 			</and>
 			<then>
 				<!-- Deployment on a remote server -->
 				<echo>We are deploying on a remote server</echo>
-				<property name="deploy.destinationDir" value="${deploy.remote.user}@${deploy.remote.host}:${deploy.destinationFolder}" />
-				<property name="deploy.backupDir" value="${deploy.remote.user}@${deploy.remote.host}:${deploy.backupFolder}" />
+				<property name="deploy.destinationDir" value="${srv.user}@${srv.host}:${deploy.destinationFolder}" />
+				<property name="deploy.backupDir" value="${srv.user}@${srv.host}:${deploy.backupFolder}" />
 			</then>
 			<else>
 				<!-- Deployment on a remote server -->
@@ -44,6 +40,14 @@
 				<property name="deploy.destinationDir" value="${deploy.destinationFolder}" />
 				<property name="deploy.backupDir" value="${deploy.backupFolder}" />
 			</else>
+		</if>
+		<if>
+			<not>
+				<isset property="srv.sshPort" />
+			</not>
+			<then>
+				<property name="srv.sshPort" value="22" override="false" />
+			</then>
 		</if>
 		<if>
 			<not>
@@ -77,16 +81,36 @@
 				<property name="deploy.delete" value="true" override="true" />
 			</then>
 		</if>
-		<!-- backupdir="${deploy.backupDir}/${projectGitBranch}.${projectName}.${DNS}" -->
-		<filesync
-			sourcedir="${projectDir}/"
-			destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${DNS}"
-			excludefile="${deploy.excludeFile}"
-			options="--rsh='ssh -p22' -rpKz"
-			verbose="${deploy.verbose}"
-			dryrun="${deploy.dryRun}"
-			itemizechanges="${deploy.itemizeChanges}"
-			checksum="${deploy.checksum}"
-			delete="${deploy.delete}" />
+
+		<!-- backupdir="${deploy.backupDir}/${projectGitBranch}.${projectName}.${apache.dn}" -->
+		<if>
+			<equals arg1="${environment}" arg2="development" />
+			<then>
+				<filesync
+					sourcedir="${projectDir}/"
+					destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${apache.dn}"
+					excludefile="${deploy.excludeFile}"
+					options="--rsh='ssh -p${srv.sshPort}' -rpKzl"
+					verbose="${deploy.verbose}"
+					dryrun="${deploy.dryRun}"
+					itemizechanges="${deploy.itemizeChanges}"
+					checksum="${deploy.checksum}"
+					delete="${deploy.delete}" />
+			</then>
+			<else>
+				<filesync
+					sourcedir="${projectDir}/"
+					destinationdir="${deploy.destinationDir}/${projectName}.${apache.dn}"
+					excludefile="${deploy.excludeFile}"
+					options="--rsh='ssh -p${srv.sshPort}' -rpKzl"
+					verbose="${deploy.verbose}"
+					dryrun="${deploy.dryRun}"
+					itemizechanges="${deploy.itemizeChanges}"
+					checksum="${deploy.checksum}"
+					delete="${deploy.delete}" />
+			</else>
+		</if>
+		
+		
 	</target>
 </project>

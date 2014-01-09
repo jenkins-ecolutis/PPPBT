@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!--
+#########################################################################
+# Filename    : library/tool/database.xml                               #
+# Description : File describing the database task                       #
+# Authors     : Benoit Caufriez                                         #
+# Last release: 19-11-2013                                              #
+#########################################################################
+-->
+
+<project name="tool-database" basedir="./../" default="help">
+
+	<target name="db:init" description="Initialize database properties">
+
+	</target>
+
+	<target name="db:backup" description="Make a database backup">
+
+	</target>
+
+	<target name="db:create" description="Create database">
+		<echo message="Creating database -> ${db.database}" />
+		<pdosqlexec
+			url="${db.pdo.driver}:host=${db.srv.host};"
+			userId="${db.user}"
+			password="${db.password}"
+			onerror="abort"
+			autocommit="false"
+			encoding="utf8">
+				DROP DATABASE IF EXISTS `${db.database}`;
+				CREATE DATABASE `${db.database}`;
+				<!-- Possibilité de faire appel à des fichiers sql -->			
+				<!--
+				<fileset dir="test-sql">
+					<include name="*.sql"/>
+				</fileset>
+				-->
+		</pdosqlexec>
+	</target>
+</project>
+

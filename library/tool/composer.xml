@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<!--
+#########################################################################
+# Filename    : library/tool/composer.xml                               #
+# Description : File describing the composer task                       #
+# Authors     : Benoit Caufriez                                         #
+# Last release: 17-12-2013                                              #
+#########################################################################
+-->
+
+<project name="tool-composer" basedir="./../" default="help">
+
+	<target name="composer:install" description="Install project">
+
+	</target>
+	
+	<target name="composer:load-dependancy" description="Loading project dependencies">
+
+	</target>
+
+</project>
+
