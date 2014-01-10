@@ -25,6 +25,7 @@
 	<!-- Import tools -->
 	<import file="./library/tool/deploy.xml"/>
 	<import file="./library/tool/database.xml"/>
+	<import file="./library/tool/composer.xml"/>
 
 	<!-- TEST -->
 	<echo message="PROJECT CONFIGURATION" />

@@ -11,7 +11,53 @@
 <project name="tool-database" basedir="./../" default="help">
 
 	<target name="db:init" description="Initialize database properties">
+		<echo message="Creating database configuration file"/>
+		<copy file="templates/database.local_template" 
+		      tofile="tmp/database.local.php" 
+		      overwrite="true">
+			<filterchain>
+				<replaceregexp>
+					<regexp pattern="##DB_HOST##" replace="${db.srv.host}" ignoreCase="true" />
+					<regexp pattern="##DB_USER##" replace="${db.user}" ignoreCase="true" />
+					<regexp pattern="##DB_PWD##" replace="${db.password}" ignoreCase="true" />
+					<regexp pattern="##DB_NAME##" replace="${db.database}" ignoreCase="true" />
+				</replaceregexp>
+			</filterchain>
+		</copy>
+		
+		<echo message="Setting database configuration file on the project"/>
+		<if>
+			<equals arg1="${environment}" arg2="development" />
+			<then>
+				<property name="deploy.dir" value="${deploy.destinationFolder}/${projectGitBranch}.${projectName}.${apache.dn}/config/autoload/" />
+			</then>
+			<else>
+				<property name="deploy.dir" value="${deploy.destinationFolder}/${projectName}.${apache.dn}/config/autoload/" />
+			</else>
+		</if>
 
+		<if>
+			<isset property="srv.host" />
+			<then>
+				<echo message="Deploy on remote"/>
+				<!-- Deployment on a remote server -->
+				<echo message="scp tmp/database.local.php ${srv.user}@${srv.host}:${deploy.dir}" />
+				<exec command="scp tmp/database.local.php ${srv.user}@${srv.host}:${deploy.dir}" />
+			</then>
+			<else>
+				<echo message="Deploy on local"/>
+				<!-- Deployment on a local server -->
+				<copy file="tmp/database.local.php" 
+				      todir="${deploy.destinationDir}/${deploy.dir}" />
+			</else>
+		</if>
+
+		<!-- Delete tmp/ directory -->
+		<echo message="Deleting database configuration file in tmp/ directory"/>
+		<delete dir="tmp"
+		        includeemptydirs="true"
+			verbose="true"
+			failonerror="true" />
 	</target>
 
 	<target name="db:backup" description="Make a database backup">

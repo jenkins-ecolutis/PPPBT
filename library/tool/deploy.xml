@@ -35,7 +35,7 @@
 				<property name="deploy.backupDir" value="${srv.user}@${srv.host}:${deploy.backupFolder}" />
 			</then>
 			<else>
-				<!-- Deployment on a remote server -->
+				<!-- Deployment on a local server -->
 				<echo>We are deploying on a local server</echo>
 				<property name="deploy.destinationDir" value="${deploy.destinationFolder}" />
 				<property name="deploy.backupDir" value="${deploy.backupFolder}" />
@@ -86,31 +86,21 @@
 		<if>
 			<equals arg1="${environment}" arg2="development" />
 			<then>
-				<filesync
-					sourcedir="${projectDir}/"
-					destinationdir="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${apache.dn}"
-					excludefile="${deploy.excludeFile}"
-					options="--rsh='ssh -p${srv.sshPort}' -rpKzl"
-					verbose="${deploy.verbose}"
-					dryrun="${deploy.dryRun}"
-					itemizechanges="${deploy.itemizeChanges}"
-					checksum="${deploy.checksum}"
-					delete="${deploy.delete}" />
+				<property name="deploy.dir" value="${deploy.destinationDir}/${projectGitBranch}.${projectName}.${apache.dn}" />
 			</then>
 			<else>
-				<filesync
-					sourcedir="${projectDir}/"
-					destinationdir="${deploy.destinationDir}/${projectName}.${apache.dn}"
-					excludefile="${deploy.excludeFile}"
-					options="--rsh='ssh -p${srv.sshPort}' -rpKzl"
-					verbose="${deploy.verbose}"
-					dryrun="${deploy.dryRun}"
-					itemizechanges="${deploy.itemizeChanges}"
-					checksum="${deploy.checksum}"
-					delete="${deploy.delete}" />
+				<property name="deploy.dir" value="${deploy.destinationDir}/${projectName}.${apache.dn}" />
 			</else>
 		</if>
-		
-		
+		<filesync
+			sourcedir="${projectDir}/"
+			destinationdir="${deploy.dir}"
+			excludefile="${deploy.excludeFile}"
+			options="--rsh='ssh -p${srv.sshPort}' -rpKzl"
+			verbose="${deploy.verbose}"
+			dryrun="${deploy.dryRun}"
+			itemizechanges="${deploy.itemizeChanges}"
+			checksum="${deploy.checksum}"
+			delete="${deploy.delete}" />
 	</target>
 </project>

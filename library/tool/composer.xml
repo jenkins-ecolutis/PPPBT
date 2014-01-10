@@ -11,7 +11,10 @@
 <project name="tool-composer" basedir="./../" default="help">
 
 	<target name="composer:install" description="Install project">
-
+		<echo message="Start install composer" />
+		<echo message="COMPOSER=dev.composer.json php composer.phar install" />
+		<exec command="COMPOSER=dev.composer.json php composer.phar install" />
+		<echo message="End install composer" />
 	</target>
 	
 	<target name="composer:load-dependancy" description="Loading project dependencies">
